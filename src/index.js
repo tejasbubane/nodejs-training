@@ -31,4 +31,9 @@ app.get("/products", (req, res) => {
   res.json(products)
 })
 
+app.get("/products/:id", (req, res) => {
+  let product = data.products.find(u => u.id === parseInt(req.params.id));
+  res.json(product);
+})
+
 app.listen(3000, () => console.log("Listening on port 3000..."))
