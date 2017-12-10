@@ -1,9 +1,14 @@
 const express = require("express")
 const app = express()
 const data = require('./data')
+const path = require("path")
+
+app.set("views", path.join(__dirname, "views"))
+app.set("view engine", "pug")
 
 app.get("/", (req, res) => {
-  res.send("Hello World...")
+  // res.send("Hello World...")
+  res.render("index", {title: "My Store", message: "Welcome to my store!"})
 })
 
 app.get("/users", (req, res) => {
@@ -28,7 +33,8 @@ app.get("/products", (req, res) => {
     )
   }
 
-  res.json(products)
+  // res.json(products)
+  res.render("products", { products })
 })
 
 app.get("/products/:id", (req, res) => {
