@@ -19,8 +19,20 @@ let show = (req, res) => {
     .then(product => res.json(product))
 }
 
+let create = (req, res) => {
+  let productParams = req.body.product
+
+  let product = new Product({
+    name: productParams.name,
+    price: productParams.price
+  })
+
+  product.save((err, product) => res.json(product))
+}
+
 router
   .get("/", index)
   .get("/:id", show)
+  .post("/", create)
 
 module.exports = router
