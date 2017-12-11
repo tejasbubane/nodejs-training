@@ -11,6 +11,11 @@ require("./models/Product")
 const express = require("express")
 const app = express()
 const apiRoutes = require("./routes/index")
+const bodyParser = require("body-parser")
+
+// Takes the raw requests and turns them into usable properties on req.body
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.send("Hello World...")

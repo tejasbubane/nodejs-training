@@ -8,16 +8,14 @@ let index = (req, res) => {
       products = Product.find();
  
   if(min_price && max_price) {
-    products = products.where("price")
-                       .gte(parseInt(min_price))
-                       .lte(parseInt(max_price))
+    products = products.where("price").gte(min_price).lte(max_price)
   }
   
   products.then(products => res.json(products))
 }
 
 let show = (req, res) => {
-  Product.findOne({id: parseInt(req.params.id)})
+  Product.findOne({id: req.params.id})
     .then(product => res.json(product))
 }
 
