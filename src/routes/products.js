@@ -24,10 +24,13 @@ let create = (req, res) => {
 
   let product = new Product({
     name: productParams.name,
-    price: productParams.price
+    imageUrl: productParams.imageUrl,
+    price: productParams.price,
+    description: productParams.description
   })
-
-  product.save((err, product) => res.json(product))
+  product.save()
+    .then(product => res.json(product))
+    .catch(err => res.status(500).json(err))
 }
 
 router

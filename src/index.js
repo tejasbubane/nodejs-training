@@ -2,7 +2,7 @@
 const mongoose = require("mongoose")
 mongoose.Promise = global.Promise
 const uri = "mongodb://localhost:27017/my-store"
-mongoose.connect(uri)
+mongoose.connect(uri, {useMongoClient: true})
 
 require("./models/User")
 require("./models/Product")
