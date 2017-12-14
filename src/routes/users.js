@@ -10,7 +10,8 @@ let index = (req, res) => {
 
 let show = (req, res) => {
   User.findOne({slug: req.params.id})
-    .then(user => res.json({...user._doc, full_name: user.full_name}))
+    .then(user => user.populate("products", {name: 1, price: 1}).execPopulate())
+    .then(user => res.json(serialize(user)))
 }
 
 let create = (req, res) => {
@@ -22,9 +23,15 @@ let create = (req, res) => {
     email: userParams.email
   })
   user.save()
-    .then(user => res.json(user))
+    .then(user => res.json(serialize(user)))
     .catch(err => res.status(500).json(err))  
 }
+
+// let and const are not hoisted
+// use `var` if you want the function below
+var serialize = user => (
+  {...user._doc, full_name: user.full_name, products: user.products}
+)
 
 router
   .get("/", index)

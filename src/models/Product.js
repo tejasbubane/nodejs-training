@@ -1,12 +1,7 @@
 const mongoose = require("mongoose")
+const Schema = mongoose.Schema
 
-// Built-in validations -
-// all fields have required
-// strings have enum, match, minlength, maxlength
-// numbers have min, max
-// ref: http://mongoosejs.com/docs/validation.html
-
-const productSchema = new mongoose.Schema({
+const productSchema = new Schema({
   name: {
     type: String,
     required: [true, "Cannot create product without a name"],
@@ -28,6 +23,10 @@ const productSchema = new mongoose.Schema({
   slug: {
     type: String,
     required: true
+  },
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: "User"
   }
 })
 

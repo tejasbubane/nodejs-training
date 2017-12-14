@@ -19,16 +19,21 @@ let show = (req, res) => {
     .then(product => res.json(product))
 }
 
-let create = (req, res) => {
-  let productParams = req.body.product
-
-  let product = new Product({
-    name: productParams.name,
-    imageUrl: productParams.imageUrl,
-    price: productParams.price,
-    description: productParams.description
+let buildProduct = params => (
+  new Product({
+    name: params.name,
+    imageUrl: params.imageUrl,
+    price: params.price,
+    description: params.description,
+    creator: new mongoose.Types.ObjectId(params.creator)
   })
+)
+
+let create = (req, res) => {
+  let product = buildProduct(req.body.product)
+
   product.save()
+    .then(product => product.populate("creator").execPopulate())
     .then(product => res.json(product))
     .catch(err => res.status(500).json(err))
 }

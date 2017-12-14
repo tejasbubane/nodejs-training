@@ -28,4 +28,13 @@ userSchema.virtual("full_name").get(function() {
   return [this.first_name, this.last_name].join(" ")
 })
 
+userSchema.virtual("products", {
+  ref: "Product",
+  localField: "_id",
+  foreignField: "creator",
+
+  // Ask multiple documents - by default returns one
+  justOne: false
+})
+
 module.exports = mongoose.model("User", userSchema)
