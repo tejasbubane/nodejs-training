@@ -49,6 +49,15 @@ let create = (req, res) => {
     .catch(err => res.status(500).json(err))
 }
 
+let categories = (req, res) => (
+  Product.aggregate()
+    .unwind("$categories")
+    .group({ _id: "$categories", count: { "$sum": 1 } })
+    .sort({ count: -1 })
+    .exec()
+    .then(categories => res.json(categories))
+)
+
 var populate = product =>
     product
       .populate("creator", "first_name last_name")
@@ -59,6 +68,7 @@ var serialize = product =>
     ({...product._doc, creator: product.creator, watchers: product.watchers })
 
 router
+  .get("/categories", categories)
   .get("/", index)
   .get("/:id", show)
   .post("/", create)
