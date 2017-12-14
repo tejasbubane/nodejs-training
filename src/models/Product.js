@@ -24,7 +24,18 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
     validate: (val) => val > 0
+  },
+  slug: {
+    type: String,
+    required: true
   }
+})
+
+productSchema.pre("validate", function(next) {
+  if(this.isModified("name")) {
+    this.slug = this.name.replace(/\s/g, "-").toLowerCase()
+  }
+  next()
 })
 
 module.exports = mongoose.model("Product", productSchema)

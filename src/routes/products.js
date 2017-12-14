@@ -15,7 +15,7 @@ let index = (req, res) => {
 }
 
 let show = (req, res) => {
-  Product.findOne({id: req.params.id})
+  Product.findOne({slug: req.params.id})
     .then(product => res.json(product))
 }
 
