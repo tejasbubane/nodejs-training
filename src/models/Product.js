@@ -27,7 +27,8 @@ const productSchema = new Schema({
   creator: {
     type: Schema.Types.ObjectId,
     ref: "User"
-  }
+  },
+  categories: [String]
 })
 
 productSchema.virtual("watchers", {

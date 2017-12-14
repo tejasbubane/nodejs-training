@@ -3,15 +3,24 @@ const router = express.Router()
 const mongoose = require("mongoose")
 const Product = mongoose.model("Product")
 
-let index = (req, res) => {
-  let { min_price, max_price } = req.query,
-      products = Product.find();
+let filteredProducts = query => {
+  let { min_price, max_price, category } = query,
+      products = Product.find()
  
+  // Filter by min and max price
   if(min_price && max_price) {
     products = products.where("price").gte(min_price).lte(max_price)
   }
-  
-  products.then(products => res.json(products))
+  // Filter by categories
+  else {
+    products = products.where("categories").equals(category)
+  }
+  return products.exec()
+}
+
+let index = (req, res) => {
+  filteredProducts(req.query)
+    .then(products => res.json(products))
 }
 
 let show = (req, res) => {
@@ -26,7 +35,8 @@ let buildProduct = params => (
     imageUrl: params.imageUrl,
     price: params.price,
     description: params.description,
-    creator: new mongoose.Types.ObjectId(params.creator)
+    creator: new mongoose.Types.ObjectId(params.creator),
+    categories: params.categories
   })
 )
 
