@@ -10,27 +10,40 @@ let index = (req, res) => {
 
 let show = (req, res) => {
   User.findOne({slug: req.params.id})
-    .then(user => user.populate("products", {name: 1, price: 1}).execPopulate())
+    .then(user => populate(user))
     .then(user => res.json(serialize(user)))
 }
 
 let create = (req, res) => {
-  let userParams = req.body.user
+  let user = new User(userParams(req.body.user))
 
-  let user = new User({
-    first_name: userParams.first_name,
-    last_name: userParams.last_name,
-    email: userParams.email
-  })
   user.save()
+    .then(user => populate(user))
     .then(user => res.json(serialize(user)))
     .catch(err => res.status(500).json(err))  
 }
 
 // let and const are not hoisted
 // use `var` if you want the function below
-var serialize = user => (
-  {...user._doc, full_name: user.full_name, products: user.products}
+var serialize = user => ({
+  ...user._doc,
+  full_name: user.full_name,
+  products: user.products,
+  watchlist: user.watchlist
+})
+
+var populate = user =>
+    user.populate("products", {name: 1})
+    .populate("watchlist", {name: 1, price: 1})
+        .execPopulate()
+
+var userParams = params => (
+  {
+    first_name: params.first_name,
+    last_name: params.last_name,
+    email: params.email,
+    watchlist: params.watchlist.map(p => new mongoose.Types.ObjectId(p))
+  }
 )
 
 router

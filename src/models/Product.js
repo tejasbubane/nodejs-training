@@ -30,6 +30,13 @@ const productSchema = new Schema({
   }
 })
 
+productSchema.virtual("watchers", {
+  ref: "User",
+  localField: "_id",
+  foreignField: "watchlist",
+  justOne: false
+})
+
 productSchema.pre("validate", function(next) {
   if(this.isModified("name")) {
     this.slug = this.name.replace(/\s/g, "-").toLowerCase()

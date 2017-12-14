@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
+const Schema = mongoose.Schema
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   first_name: {
     type: String,
     required: true
@@ -14,7 +15,11 @@ const userSchema = new mongoose.Schema({
   slug: {
     type: String,
     required: true
-  }
+  },
+  watchlist: [{
+    type: Schema.Types.ObjectId,
+    ref: "Product"
+  }]
 })
 
 userSchema.pre("validate", function(next) {
