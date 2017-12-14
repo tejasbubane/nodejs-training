@@ -24,4 +24,8 @@ userSchema.pre("validate", function(next) {
   next()
 })
 
+userSchema.virtual("full_name").get(function() {
+  return [this.first_name, this.last_name].join(" ")
+})
+
 module.exports = mongoose.model("User", userSchema)

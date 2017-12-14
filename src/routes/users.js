@@ -9,7 +9,8 @@ let index = (req, res) => {
 }
 
 let show = (req, res) => {
-  User.findOne({slug: req.params.id}).then(user => res.json(user))
+  User.findOne({slug: req.params.id})
+    .then(user => res.json({...user._doc, full_name: user.full_name}))
 }
 
 let create = (req, res) => {
