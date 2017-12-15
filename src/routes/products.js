@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const mongoose = require("mongoose")
 const Product = mongoose.model("Product")
+const User = mongoose.model("User")
 
 let filteredProducts = query => {
   let { min_price, max_price, category } = query,
@@ -58,6 +59,18 @@ let categories = (req, res) => (
     .then(categories => res.json(categories))
 )
 
+let popular = (req, res) => {
+  Product.aggregate()
+    .lookup({ from: "users", localField: "_id",
+              foreignField: "watchlist", as: "watchers" })
+    .unwind("$watchers")
+    .group({_id: {_id: "$_id", name: "$name"}, count: { "$sum": 1 }})
+    .sort({ count: -1 })
+    .limit(5)
+    .exec()
+    .then(products => res.json(products))
+}
+
 var populate = product =>
     product
       .populate("creator", "first_name last_name")
@@ -69,6 +82,7 @@ var serialize = product =>
 
 router
   .get("/categories", categories)
+  .get("/popular", popular)
   .get("/", index)
   .get("/:id", show)
   .post("/", create)
