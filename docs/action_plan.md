@@ -1,23 +1,23 @@
 # Action Plan
 
-### Session 1
+### 1. Node Basics
 
 * Setup and Hello world with express
 * General philosophy of nodejs
 * Basic CRUD
 * Connecting to mongodb
 
-### Session 2
+### 2. MongoDB/Mongoose
 
 * Deep dive into mongodb
 * Indexes and aggregation
 
-### Session 3
+### 3. NodeJS Advanced
 
 * Error handling and middleware
 * Authentication (JWT) in NodeJs
 
-### Session 4
+### 4. React Basics
 
 * Setting up frontend
 * Basics of React Components
@@ -25,12 +25,12 @@
 * List of all users and products
 * Lifecycle methods
 
-### Session 5
+### 5. React Advanced
 
 * Deep dive into React
 * Building product filters
 
-### Session 6
+### 6. Redux Basics
 
 * Intro to redux
 * Conclusion
