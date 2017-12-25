@@ -17,6 +17,18 @@ const bodyParser = require("body-parser")
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const logger = (req, res, next) => {
+  let start = new Date()
+  console.log(`${start} : ${req.method} ${req.originalUrl}`)
+  next()
+
+  // This will not work!
+  // let stop = new Date()
+  // console.log(`${res.statusCode} [${stop - start}ms]`)
+}
+
+app.use(logger);
+
 app.get("/", (req, res) => {
   res.send("Hello World...")
 })
