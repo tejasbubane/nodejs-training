@@ -4,6 +4,8 @@ const mongoose = require("mongoose")
 const Product = mongoose.model("Product")
 const User = mongoose.model("User")
 
+const { catchErrors } = require("../middlewares/errorHandlers")
+
 let filteredProducts = query => {
   let { min_price, max_price, category } = query,
       products = Product.find()
@@ -24,9 +26,12 @@ let index = (req, res) => {
     .then(products => res.json(products))
 }
 
-let show = (req, res) => {
-  Product.findOne({slug: req.params.id})
-    .then(product => populate(product))
+let show = (req, res, next) => {
+  return Product.findOne({slug: req.params.id})
+    .then(product => {
+      if(product) return populate(product)
+      else return next(new Error(`Product "${req.params.id}" not found!`))
+    })
     .then(product => res.json(serialize(product)))
 }
 
@@ -41,13 +46,12 @@ let buildProduct = params => (
   })
 )
 
-let create = (req, res) => {
+let create = (req, res, next) => {
   let product = buildProduct(req.body.product)
 
-  product.save()
+  return product.save()
     .then(product => populate(product))
     .then(product => res.json(serialize(product)))
-    .catch(err => res.status(500).json(err))
 }
 
 let categories = (req, res) => (
@@ -84,7 +88,7 @@ router
   .get("/categories", categories)
   .get("/popular", popular)
   .get("/", index)
-  .get("/:id", show)
-  .post("/", create)
+  .get("/:id", catchErrors(show))
+  .post("/", catchErrors(create))
 
 module.exports = router
