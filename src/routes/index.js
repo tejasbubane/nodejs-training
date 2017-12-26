@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const saltRounds = 10
 
+const { catchErrors } = require("../middlewares/errorHandlers")
+
 const userRoutes = require("./users")
 const productRoutes = require("./products")
 const { passport, jwtOpts } = require("../middlewares/passport")
@@ -43,6 +45,15 @@ const betterRegister = async (req, res, next) => {
   }
 }
 
+// Cleaner version of register - with global error handler
+const evenBetterRegister = async (req, res, next) => {
+  let user = new User(req.body)
+  user.hashPassword = await bcrypt.hash(req.body.password, saltRounds)
+
+  user = await user.save()
+  res.json({...user._doc, hashPassword: undefined})
+}
+
 const login = (req, res) => {
   let { email, password } = req.body;
 
@@ -61,7 +72,7 @@ const login = (req, res) => {
 }
 
 router
-  .post("/register", betterRegister)
+  .post("/register", catchErrors(evenBetterRegister))
   .post("/login", login)
 
 router.use("/users", passport.authenticate('jwt', { session: false }), userRoutes)
