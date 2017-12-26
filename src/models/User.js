@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
+const bcrypt = require("bcrypt")
 
 const userSchema = new Schema({
   first_name: {
@@ -10,7 +11,11 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true, 
-    match: [/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/, "Invalid email"]
+    match: [/^[^@\s]+@[^@\s]+\.[^@\s]+$/, "Invalid email"]
+  },
+  hashPassword: {
+    type: String,
+    required: true
   },
   slug: {
     type: String,
@@ -41,5 +46,9 @@ userSchema.virtual("products", {
   // Ask multiple documents - by default returns one
   justOne: false
 })
+
+userSchema.methods.comparePassword = function(password) {
+  return bcrypt.compareSync(password, this.hashPassword)
+}
 
 module.exports = mongoose.model("User", userSchema)
