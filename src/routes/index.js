@@ -29,6 +29,20 @@ const register = (req, res, next) => {
     })
 }
 
+// clean register with `async-await` - new in node8
+const betterRegister = async (req, res, next) => {
+  let user = new User(req.body)
+  user.hashPassword = await bcrypt.hash(req.body.password, saltRounds)
+
+  try {
+    user = await user.save()
+    res.json({...user._doc, hashPassword: undefined})
+  }
+  catch(err) {
+    next(err)
+  }
+}
+
 const login = (req, res) => {
   let { email, password } = req.body;
 
@@ -47,7 +61,7 @@ const login = (req, res) => {
 }
 
 router
-  .post("/register", register)
+  .post("/register", betterRegister)
   .post("/login", login)
 
 router.use("/users", passport.authenticate('jwt', { session: false }), userRoutes)
