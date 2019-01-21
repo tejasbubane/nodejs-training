@@ -74,3 +74,11 @@ I could not find any good free ones. Here's one that lot of people recommend but
 * [Learn Node](https://learnnode.com/)
 
 ### [Project Ideas](/project_ideas.md)
+
+
+
+## Contact
+
+* Email: [my-github-username] [at] gmail [dot] com
+
+* Twitter: [@tejasbubane](https://twitter.com/tejasbubane/)
